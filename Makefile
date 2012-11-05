@@ -6,4 +6,4 @@ test:
 pack: test
 	npm pack
 
-.PHONY: test
+.PHONY: pack test

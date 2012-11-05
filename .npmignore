@@ -4,4 +4,6 @@
 *.swp
 *~
 *.tgz
+.npmignore
+.gitignore
 Makefile
