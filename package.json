@@ -1,7 +1,7 @@
 {
-  "name": "custom-json",
+  "name": "super-json",
   "version": "0.0.1",
-  "description": "Library that provides JSON serialization of objects not supported natively by JSON such as Dates, RegExps, or any other user-defined class instance",
+  "description": "JSON serializer that handles Dates, RegExps or any other type you want",
   "main": "./lib/custom-json.js",
   "scripts": {
     "test": "make test"
