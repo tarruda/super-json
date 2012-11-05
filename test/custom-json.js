@@ -24,6 +24,11 @@ suite('Builtin serializers', function() {
     obj.should.eql({a: {b: {c: new Date(-343434)}}});
   });
 
+  test('deep json ignore properties without magic prefix', function() {
+    var obj = parse('{"a":{"b":{"c":"#!Date([-343434])"}}}');
+    obj.should.eql({a: {b: {c: '#!Date([-343434])'}}});
+  });
+
   test('regexp with flags to json', function() {
     stringify(/abc\d/ig).should.eql('"#!RegExp([\\"abc\\\\\\\\d\\",\\"gi\\"])"');
   });
