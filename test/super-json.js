@@ -53,6 +53,20 @@ suite('Builtin serializers', function() {
     r.ignoreCase.should.not.be.ok;
   });
 
+  test('using custom replacer', function() {
+    var r = {a:/abc/};
+    stringify(r, function(k, v) {
+      if (typeof v === 'object') return [1]; else return v;
+    }).should.eql('[1]');
+  });
+
+  test('using custom reviver', function() {
+    var s = '{"a":"#!RegExp([\\"abc\\",\\"\\"])"}';
+    parse(s, function(k, v) {
+      if (typeof v === 'object') return [2]; else return v;
+    }).should.eql([2]);
+  });
+
   test("complex object with indentation", function() {
     var obj = {
       someStr: 'Str',

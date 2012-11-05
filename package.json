@@ -2,7 +2,7 @@
   "name": "super-json",
   "version": "0.0.1",
   "description": "JSON serializer that handles Dates, RegExps or any other type you want",
-  "main": "./lib/custom-json.js",
+  "main": "./lib/super-json.js",
   "scripts": {
     "test": "make test"
   },
@@ -10,7 +10,7 @@
     "mocha": "*",
     "should": "*"
   },
-  "repository": "git://github.com/tarruda/custom-json.git",
+  "repository": "git://github.com/tarruda/super-json.git",
   "keywords": [
     "json",
     "custom",
