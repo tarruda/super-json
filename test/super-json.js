@@ -1,4 +1,4 @@
-var customJson = require('../lib/custom-json');
+var customJson = require('../lib/super-json');
 
 suite('Builtin serializers', function() {
   var superJSON = customJson.create();
