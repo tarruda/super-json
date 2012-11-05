@@ -117,4 +117,31 @@ suite('Builtin serializers', function() {
     parse('"#!RegExp[err]"').should.eql("#!RegExp[err]");
   })
 
+  test('serializing/deserializing functions', function() {
+    var addCopy;
+
+    function addOriginal (op, a, b) {
+      if (op === '-')
+        return a - b;
+      else
+        return a + b;
+    }
+
+    addCopy = parse(stringify(addOriginal));
+    addCopy('-', 5, 3).should.eql(2);
+    addCopy('+', 5, 3).should.eql(8);
+    addOriginal.name.should.eql('addOriginal');
+    // Names are not standard, so are not serialized
+    addCopy.name.should.eql('');
+    addCopy.should.not.eql(addOriginal);
+  });
+
+  test('cannot serialize functions without source available', function() {
+    var stub = function() {
+      return 1;
+    };
+    (function() {serialize(JSON.stringify)}).should.throw();
+    (function() {serialize(stub)}).should.throw();
+  });
+
 });
