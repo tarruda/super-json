@@ -1,8 +1,7 @@
 ## custom-json
 
-  Library that provides JSON serialization of javascript classes not supported 
-natively by JSON such as Date, RegExp, or any other user-defined class.
-
+  Library that provides JSON serialization of objects not supported natively
+ by JSON such as Dates, RegExps, or any other user-defined class instance.
 
 #### Installation
 
@@ -49,4 +48,3 @@ arguments, and serializes custom types to a string with this format:
 nested objects, the keys are also prefixed with the magic string, so no
 untrusted input validatation needs to be done prior to serialization(unless the
 keys are also untrusted).
- 
