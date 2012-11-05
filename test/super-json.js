@@ -7,47 +7,51 @@ suite('Builtin serializers', function() {
 
   test('shallow date to json', function() {
     var obj = new Date(343434);
-    stringify(obj).should.equal('"#!Date([343434])"');
+    stringify(obj).should.equal('"#!Date[343434]"');
   });
   
   test('shallow json to date', function() {
-    parse('"#!Date([2])"').getTime().should.equal(new Date(2).getTime());
+    parse('"#!Date[2]"').getTime().should.equal(new Date(2).getTime());
   });
 
   test('deep date to json', function() {
     var obj = {a: {b: {c: new Date(-343433)}}};
-    stringify(obj).should.equal('{"a":{"b":{"c":"#!Date([-343433])"}}}');
+    stringify(obj).should.equal('{"a":{"b":{"c":"#!Date[-343433]"}}}');
   });
   
   test('deep json to date', function() {
-    var obj = parse('{"a":{"b":{"c":"#!Date([-343434])"}}}');
+    var obj = parse('{"a":{"b":{"c":"#!Date[-343434]"}}}');
     obj.should.eql({a: {b: {c: new Date(-343434)}}});
   });
 
   test('it is not possible to insert the special string manually', function() {
-    var obj = {a: {b: {c: '#!Date([-343434])'}}};
+    var obj = {a: {b: {c: '#!Date[-343434]'}}};
     var stringified = stringify(obj);
-    stringified.should.equal('{"a":{"b":{"c":"##!!Date([-343434])"}}}');
+    stringified.should.equal('{"a":{"b":{"c":"##!!Date[-343434]"}}}');
+    parse(stringified).should.eql(obj);
+    obj = {a: {b: {c: '##!!!Date[-343434]'}}};
+    stringified = stringify(obj);
+    stringified.should.equal('{"a":{"b":{"c":"####!!!!!!Date[-343434]"}}}');
     parse(stringified).should.eql(obj);
   });
 
   test('regexp with flags to json', function() {
-    stringify(/abc\d/ig).should.eql('"#!RegExp([\\"abc\\\\\\\\d\\",\\"gi\\"])"');
+    stringify(/abc\d/ig).should.eql('"#!RegExp[\\"abc\\\\\\\\d\\",\\"gi\\"]"');
   });
 
   test('json to regexp with flags', function() {
-    var r = parse('"#!RegExp([\\"abc\\\\\\\\d\\",\\"gmi\\"])"');
+    var r = parse('"#!RegExp[\\"abc\\\\\\\\d\\",\\"gmi\\"]"');
     r.multiline.should.be.ok;
     r.global.should.be.ok;
     r.ignoreCase.should.be.ok;
   });
 
   test('regexp to json', function() {
-    stringify(/abc\d/).should.eql('"#!RegExp([\\"abc\\\\\\\\d\\",\\"\\"])"');
+    stringify(/abc\d/).should.eql('"#!RegExp[\\"abc\\\\\\\\d\\",\\"\\"]"');
   });
 
   test('json to regexp', function() {
-    var r = parse('"#!RegExp([\\"abc\\\\\\\\d\\",\\"\\"])"');
+    var r = parse('"#!RegExp[\\"abc\\\\\\\\d\\",\\"\\"]"');
     r.multiline.should.not.be.ok;
     r.global.should.not.be.ok;
     r.ignoreCase.should.not.be.ok;
@@ -61,7 +65,7 @@ suite('Builtin serializers', function() {
   });
 
   test('using custom reviver', function() {
-    var s = '{"a":"#!RegExp([\\"abc\\",\\"\\"])"}';
+    var s = '{"a":"#!RegExp[\\"abc\\",\\"\\"]"}';
     parse(s, function(k, v) {
       if (typeof v === 'object') return [2]; else return v;
     }).should.eql([2]);
@@ -93,13 +97,13 @@ suite('Builtin serializers', function() {
       '    1,\n' +
       '    null,\n' +
       '    "ssas",\n' +
-      '    "#!Date([1])",\n' +
-      '    "#!RegExp([\\"abc\\",\\"\\"])",\n' +
+      '    "#!Date[1]",\n' +
+      '    "#!RegExp[\\"abc\\",\\"\\"]",\n' +
       '    {\n' + 
       '      "anotherArray": [\n' +
-      '        "#!Date([2])"\n' +
+      '        "#!Date[2]"\n' +
       '      ],\n' +
-      '      "value": "#!RegExp([\\"someregex\\",\\"i\\"])"\n' +
+      '      "value": "#!RegExp[\\"someregex\\",\\"i\\"]"\n' +
       '    }\n' +
       '  ],\n' +
       '  "someNull": null\n' +
@@ -109,5 +113,8 @@ suite('Builtin serializers', function() {
     parse(actual).should.eql(obj);
   });
 
+  test('ignore parse errors on the json array', function() {
+    parse('"#!RegExp[err]"').should.eql("#!RegExp[err]");
+  })
 
 });
