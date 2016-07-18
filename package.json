@@ -1,6 +1,6 @@
 {
   "name": "super-json",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "JSON serializer that handles Dates, RegExps, Functions or any other type you want",
   "main": "./lib/super-json.js",
   "scripts": {
