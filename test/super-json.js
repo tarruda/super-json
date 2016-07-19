@@ -144,4 +144,15 @@ suite('Builtin serializers', function() {
     (function() {serialize(stub)}).should.throw();
   });
 
+  test('symbol to json', function() {
+    stringify(Symbol.for('global')).should.equal('"#!Symbol[\\"global\\",0,0]"');
+    stringify(Symbol.iterator).should.equal('"#!Symbol[0,\\"iterator\\",0]"');
+    stringify(Symbol('private')).should.equal('"#!Symbol[0,0,\\"private\\"]"');
+  });
+  
+  test('json to symbol', function() {
+    parse('"#!Symbol[\\"global\\",0,0]"').should.equal(Symbol.for('global'));
+    parse('"#!Symbol[0,\\"iterator\\",0]"').should.equal(Symbol.iterator);
+    parse('"#!Symbol[0,0,\\"private\\"]"').toString().should.equal('Symbol(private)');
+  });
 });

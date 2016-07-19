@@ -1,0 +1,12 @@
+{
+    "es5": true,
+    "evil": true,
+    "node": true,
+    "bitwise": true,
+    "eqeqeq": true,
+    "funcscope": true,
+    "latedef": true,
+    "shadow": true,
+    "undef": true,
+    "unused": true
+}
