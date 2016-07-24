@@ -1,7 +1,7 @@
-var customJson = require('../lib/super-json');
+var superJson = require('../lib/super-json');
 
 suite('Builtin serializers', function() {
-  var superJSON = customJson.create();
+  var superJSON = superJson.create();
   var stringify = superJSON.stringify;
   var parse = superJSON.parse;
 
@@ -131,8 +131,7 @@ suite('Builtin serializers', function() {
     addCopy('-', 5, 3).should.eql(2);
     addCopy('+', 5, 3).should.eql(8);
     addOriginal.name.should.eql('addOriginal');
-    // Names are not standard, so are not serialized
-    addCopy.name.should.eql('');
+    addCopy.name.should.eql('anonymous');
     addCopy.should.not.eql(addOriginal);
   });
 
@@ -154,5 +153,28 @@ suite('Builtin serializers', function() {
     parse('"#!Symbol[\\"global\\",0,0]"').should.equal(Symbol.for('global'));
     parse('"#!Symbol[0,\\"iterator\\",0]"').should.equal(Symbol.iterator);
     parse('"#!Symbol[0,0,\\"private\\"]"').toString().should.equal('Symbol(private)');
+  });
+
+  test('serializer with a name defined at runtime', function() {
+    var genericSerializer = {
+      serialize: function(obj) {
+        if (obj instanceof Date) {
+          return superJson.dateSerializer.serialize(obj);
+        }
+        return superJson.regExpSerializer.serialize(obj);
+      },
+      isInstance: function(obj) {
+        return obj instanceof Date || obj instanceof RegExp;
+      },
+      name: function(obj) {
+        if (obj instanceof Date)
+          return 'Date';
+        return 'RegExp';
+      }
+    };
+
+    var sjson = superJson.create({serializers: [genericSerializer]});
+    sjson.stringify(new Date(343434)).should.equal('"#!Date[343434]"');
+    sjson.stringify(/abc\d/ig).should.equal('"#!RegExp[\\"abc\\\\\\\\d\\",\\"gi\\"]"');
   });
 });
